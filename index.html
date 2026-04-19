@@ -19,6 +19,18 @@
     .chat {
       margin-top: 20px;
     }
+    #status {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #00d4ff;
+  letter-spacing: 2px;
+}
+.chat p {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px;
+}
   </style>
 </head>
 <body>
@@ -34,31 +46,41 @@
 <script>
 function send() {
   const inputBox = document.getElementById("input");
-  const input = inputBox.value.toLowerCase();
+  const inputRaw = inputBox.value;
+  const input = inputRaw.toLowerCase();
   const chat = document.getElementById("chat");
+  const status = document.getElementById("status");
 
   let response = "";
 
-  if (input.includes("study")) {
-    response = "📘 Study Mode Activated → Notifications OFF, Focus ON";
+  // smarter intent detection
+  if (input.includes("study") || input.includes("exam") || input.includes("learn")) {
+    response = "📘 Study Mode Activated";
+    status.innerText = "⚡ STUDY MODE ACTIVE";
     document.body.style.background = "#050a14";
   } 
-  else if (input.includes("tired") || input.includes("rest")) {
-    response = "😴 Rest Mode Activated → Relax, breathe";
+  else if (input.includes("tired") || input.includes("sleep") || input.includes("rest")) {
+    response = "😴 Rest Mode Activated";
+    status.innerText = "💤 REST MODE ACTIVE";
     document.body.style.background = "#1a0f0f";
   } 
-  else if (input.includes("focus")) {
-    response = "⚡ Deep Focus Mode → Distractions eliminated";
+  else if (input.includes("focus") || input.includes("deep work")) {
+    response = "⚡ Focus Mode Activated";
+    status.innerText = "🔥 FOCUS MODE ACTIVE";
     document.body.style.background = "#000000";
   } 
-  else if (input.includes("hello")) {
-    response = "👋 Hello. LifeOS is active.";
+  else if (input.includes("hello") || input.includes("hi")) {
+    response = "👋 Hello. LifeOS is online.";
+    status.innerText = "🟢 SYSTEM ONLINE";
   } 
   else {
-    response = "⚠️ Command not recognized";
+    response = "🤖 Understanding... but command not mapped yet.";
+    status.innerText = "⚠️ LEARNING MODE";
   }
 
-  chat.innerHTML += "<p>" + response + "</p>";
+  chat.innerHTML += "<p><b>You:</b> " + inputRaw + "</p>";
+  chat.innerHTML += "<p><b>LifeOS:</b> " + response + "</p>";
+
   inputBox.value = "";
 }
 </script>
