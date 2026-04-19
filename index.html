@@ -33,18 +33,33 @@
 
 <script>
 function send() {
-  const input = document.getElementById("input").value.toLowerCase();
+  const inputBox = document.getElementById("input");
+  const input = inputBox.value.toLowerCase();
+  const chat = document.getElementById("chat");
+
   let response = "";
 
   if (input.includes("study")) {
-    response = "📘 Study mode activated";
-  } else if (input.includes("tired")) {
-    response = "😴 Take a break";
-  } else {
-    response = "❓ Command not recognized";
+    response = "📘 Study Mode Activated → Notifications OFF, Focus ON";
+    document.body.style.background = "#050a14";
+  } 
+  else if (input.includes("tired") || input.includes("rest")) {
+    response = "😴 Rest Mode Activated → Relax, breathe";
+    document.body.style.background = "#1a0f0f";
+  } 
+  else if (input.includes("focus")) {
+    response = "⚡ Deep Focus Mode → Distractions eliminated";
+    document.body.style.background = "#000000";
+  } 
+  else if (input.includes("hello")) {
+    response = "👋 Hello. LifeOS is active.";
+  } 
+  else {
+    response = "⚠️ Command not recognized";
   }
 
-  document.getElementById("chat").innerHTML += "<p>" + response + "</p>";
+  chat.innerHTML += "<p>" + response + "</p>";
+  inputBox.value = "";
 }
 </script>
 
