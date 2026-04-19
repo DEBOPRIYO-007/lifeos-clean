@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LifeOS</title>
+  <style>
+    body {
+      background: #0a0f1c;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      padding: 50px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    .chat {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>LifeOS</h1>
+<p>Control your digital world</p>
+
+<input id="input" placeholder="Type command..." />
+<button onclick="send()">Send</button>
+
+<div class="chat" id="chat"></div>
+
+<script>
+function send() {
+  const input = document.getElementById("input").value.toLowerCase();
+  let response = "";
+
+  if (input.includes("study")) {
+    response = "📘 Study mode activated";
+  } else if (input.includes("tired")) {
+    response = "😴 Take a break";
+  } else {
+    response = "❓ Command not recognized";
+  }
+
+  document.getElementById("chat").innerHTML += "<p>" + response + "</p>";
+}
+</script>
+
+</body>
+</html>
