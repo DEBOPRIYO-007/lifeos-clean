@@ -4,57 +4,118 @@
   <title>LifeOS</title>
   <style>
     body {
-      background: #0a0f1c;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-      padding: 50px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 10px;
-      border-radius: 10px;
-      border: none;
-    }
-    .chat {
-      margin-top: 20px;
-    }
-    #status {
-  margin-bottom: 20px;
-  font-size: 14px;
+  margin: 0;
+  background: #0a0f1c;
   color: #00d4ff;
-  letter-spacing: 2px;
+  font-family: "Courier New", monospace;
 }
-.chat p {
-  background: rgba(255,255,255,0.05);
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #00d4ff33;
+}
+
+.logo {
+  font-weight: bold;
+}
+
+/* CONSOLE */
+.console {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.console p {
+  margin: 5px 0;
+  background: rgba(0,212,255,0.05);
+  padding: 8px;
+  border-radius: 8px;
+  text-shadow: 0 0 5px #00d4ff88;
+}
+
+/* INPUT BAR */
+.input-bar {
+  display: flex;
+  gap: 10px;
   padding: 10px;
-  border-radius: 10px;
-  margin: 5px;
+  border-top: 1px solid #00d4ff33;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  background: black;
+  border: none;
+  color: #00d4ff;
+  outline: none;
+}
+
+button {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #00d4ff22;
+  color: #00d4ff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00d4ff44;
 }
   </style>
 </head>
 <body>
 
-<h1>LifeOS</h1>
-<p>Control your digital world</p>
+<div id="app">
 
-<div id="status">⚡ SYSTEM IDLE</div>
-  
-<input id="input" placeholder="Type command..." onkeydown="handleKey(event)" />
-<button onclick="send()">Send</button>
-<button onclick="startVoice()">🎤</button>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">LifeOS</div>
+    <div id="status">⚡ SYSTEM IDLE</div>
+  </header>
 
-<div class="chat" id="chat"></div>
+  <!-- CONSOLE -->
+  <main class="console" id="chat"></main>
+
+  <!-- INPUT BAR -->
+  <div class="input-bar">
+    <input id="input" placeholder="Enter command..." />
+    <button onclick="send()">Send</button>
+    <button onclick="startVoice()">🎤</button>
+  </div>
+
+</div>
 
 <script>
 function send() {
   const inputBox = document.getElementById("input");
-  const inputRaw = inputBox.value;
+  const inputRaw = inputBox.value.trim();
+if (!inputRaw) return;
   const input = inputRaw.toLowerCase();
   const chat = document.getElementById("chat");
   const status = document.getElementById("status");
 
-  let response = "";
+  status.innerText = "⏳ PROCESSING...";
+
+  chat.scrollTop = chat.scrollHeight;
+    response = "📘 Study Mode Activated";
+    status.innerText = "⚡ STUDY MODE ACTIVE";
+    document.body.style.background = "#050a14";
+  } 
+
+  chat.innerHTML += `<p>> ${inputRaw}</p>`;
+  
+  setTimeout(() => {
 
   if (input.includes("study") || input.includes("exam") || input.includes("learn")) {
     response = "📘 Study Mode Activated";
@@ -80,23 +141,26 @@ function send() {
     status.innerText = "⚠️ LEARNING MODE";
   }
 
-  chat.innerHTML += "<p><b>You:</b> " + inputRaw + "</p>";
-  chat.innerHTML += "<p><b>LifeOS:</b> " + response + "</p>";
+  chat.innerHTML += `<p>> ${inputRaw}</p>`;
+  chat.innerHTML += `<p>${response}</p>`;
+  chat.scrollTop = chat.scrollHeight;
+
+}, 300);
 
   inputBox.value = "";
-}
-
-// 👇 THIS MUST BE OUTSIDE send()
-function handleKey(event) {
-  if (event.key === "Enter") {
-    send();
-  }
-}
+  inputBox.focus();
 
 function startVoice() {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Voice not supported in this browser");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
   recognition.lang = "en-US";
+
   recognition.start();
 
   recognition.onresult = function(event) {
@@ -106,10 +170,21 @@ function startVoice() {
   };
 
   recognition.onerror = function() {
-    alert("Voice not supported or permission denied");
+    alert("Voice error or permission denied");
   };
 }
+  document.getElementById("input").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    send();
+  }
+});
 </script>
+
+window.onload = function() {
+  const chat = document.getElementById("chat");
+  chat.innerHTML += `<p>⚡ LifeOS Initialized</p>`;
+  chat.innerHTML += `<p>Type a command to begin...</p>`;
+};
 
 </body>
 </html>
