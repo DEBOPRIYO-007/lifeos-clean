@@ -97,87 +97,100 @@ button:hover {
 </div>
 
 <script>
-function send() {
-  const inputBox = document.getElementById("input");
-  const inputRaw = inputBox.value.trim();
-if (!inputRaw) return;
-  const input = inputRaw.toLowerCase();
-  const chat = document.getElementById("chat");
-  const status = document.getElementById("status");
+window.onload = function() {
 
-  status.innerText = "⏳ PROCESSING...";
+  function send() {
+    const inputBox = document.getElementById("input");
+    const inputRaw = inputBox.value.trim();
+    if (!inputRaw) return;
 
-  chat.scrollTop = chat.scrollHeight;
-    response = "📘 Study Mode Activated";
-    status.innerText = "⚡ STUDY MODE ACTIVE";
-    document.body.style.background = "#050a14";
-  } 
+    const input = inputRaw.toLowerCase();
+    const chat = document.getElementById("chat");
+    const status = document.getElementById("status");
 
-  chat.innerHTML += `<p>> ${inputRaw}</p>`;
-  
-  setTimeout(() => {
+    let response = "";
 
-  if (input.includes("study") || input.includes("exam") || input.includes("learn")) {
-    response = "📘 Study Mode Activated";
-    status.innerText = "⚡ STUDY MODE ACTIVE";
-    document.body.style.background = "#050a14";
-  } 
-  else if (input.includes("tired") || input.includes("sleep") || input.includes("rest")) {
-    response = "😴 Rest Mode Activated";
-    status.innerText = "💤 REST MODE ACTIVE";
-    document.body.style.background = "#1a0f0f";
-  } 
-  else if (input.includes("focus") || input.includes("deep work")) {
-    response = "⚡ Focus Mode Activated";
-    status.innerText = "🔥 FOCUS MODE ACTIVE";
-    document.body.style.background = "#000000";
-  } 
-  else if (input.includes("hello") || input.includes("hi")) {
-    response = "👋 Hello. LifeOS is online.";
-    status.innerText = "🟢 SYSTEM ONLINE";
-  } 
-  else {
-    response = "🤖 Understanding... but command not mapped yet.";
-    status.innerText = "⚠️ LEARNING MODE";
+    chat.innerHTML += `<p>> ${inputRaw}</p>`;
+    chat.scrollTop = chat.scrollHeight;
+
+    status.innerText = "⏳ PROCESSING...";
+
+    setTimeout(() => {
+
+      if (input.includes("study") || input.includes("exam") || input.includes("learn")) {
+        response = "📘 Study Mode Activated";
+        status.innerText = "⚡ STUDY MODE ACTIVE";
+        document.body.style.background = "#050a14";
+      } 
+      else if (input.includes("tired") || input.includes("sleep") || input.includes("rest")) {
+        response = "😴 Rest Mode Activated";
+        status.innerText = "💤 REST MODE ACTIVE";
+        document.body.style.background = "#1a0f0f";
+      } 
+      else if (input.includes("focus") || input.includes("deep work")) {
+        response = "⚡ Focus Mode Activated";
+        status.innerText = "🔥 FOCUS MODE ACTIVE";
+        document.body.style.background = "#000000";
+      } 
+      else if (input.includes("hello") || input.includes("hi")) {
+        response = "👋 Hello. LifeOS is online.";
+        status.innerText = "🟢 SYSTEM ONLINE";
+      } 
+      else {
+        response = "🤖 Understanding... but command not mapped yet.";
+        status.innerText = "⚠️ LEARNING MODE";
+      }
+
+      chat.innerHTML += `<p>${response}</p>`;
+      chat.scrollTop = chat.scrollHeight;
+
+    }, 300);
+
+    inputBox.value = "";
+    inputBox.focus();
   }
 
-  chat.innerHTML += `<p>> ${inputRaw}</p>`;
-  chat.innerHTML += `<p>${response}</p>`;
-  chat.scrollTop = chat.scrollHeight;
-
-}, 300);
-
-  inputBox.value = "";
-  inputBox.focus();
-
-function startVoice() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    alert("Voice not supported in this browser");
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-
-  recognition.start();
-
-  recognition.onresult = function(event) {
-    const voiceText = event.results[0][0].transcript;
-    document.getElementById("input").value = voiceText;
-    send();
-  };
-
-  recognition.onerror = function() {
-    alert("Voice error or permission denied");
-  };
-}
+  // ENTER KEY FIX
   document.getElementById("input").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    send();
-  }
-});
+    if (e.key === "Enter") {
+      send();
+    }
+  });
+
+  // BUTTON CLICK FIX (important)
+  window.send = send;
+
+  // VOICE
+  window.startVoice = function() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Voice not supported in this browser");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+      const voiceText = event.results[0][0].transcript;
+      document.getElementById("input").value = voiceText;
+      send();
+    };
+
+    recognition.onerror = function() {
+      alert("Voice error or permission denied");
+    };
+  };
+
+  // BOOT MESSAGE
+  const chat = document.getElementById("chat");
+  chat.innerHTML += `<p>⚡ LifeOS Initialized</p>`;
+  chat.innerHTML += `<p>Type a command to begin...</p>`;
+
+};
 </script>
 
 window.onload = function() {
